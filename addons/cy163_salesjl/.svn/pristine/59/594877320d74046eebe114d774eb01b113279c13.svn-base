@@ -1,0 +1,52 @@
+<div class="panel-body table-responsive" style="padding:0px;">
+	<table class="table table-hover">
+		<thead>
+		<tr>
+			<th>规格名称</th>
+			<th>库存</th>
+			<th>售价</th>
+			<th>代理价</th>
+			<th>成本价</th>
+			<th style='width:50px;'></th>
+		</tr>
+		</thead>
+		<tbody id="option-items">
+			{loop $options $p}
+			<tr>
+				<td>
+					<input name="option_title[]" type="text" class="form-control option_title" value="{$p['title']}"/>
+					<input name="option_id[]" type="hidden" class="form-control" value="{$p['id']}"/>
+				</td>
+				<td><input name="option_stock[]" type="text" class="form-control option_stock" value="{$p['stock']}"/></td>
+				<td><input name="option_normalprice[]" type="text" class="form-control option_normalprice" value="{$p['normalprice']}"/></td>
+				<td><input name="option_dailiprice[]" type="text" class="form-control option_dailiprice" value="{$p['dailiprice']}"/></td>
+				<td><input name="option_chengbenprice[]" type="text" class="form-control option_normalprice" value="{$p['chengbenprice']}"/>
+				<td><a href="javascript:;" onclick="deleteoption(this)" style="margin-top:10px;" title="删除"><i class='fa fa-remove'></i></a></td>
+			</tr>
+			{/loop}
+		</tbody>
+		<tbody>
+			<tr>
+				<td colspan="4">
+					<a href="javascript:;" id='add-option' onclick="addoption()" style="margin-top:10px;"  title="添加规格"><i class='fa fa-plus'></i>添加规格</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<script language="javascript">
+	function addoption() {
+		var url = "{php echo $this->createWebUrl('option')}";
+		$.ajax({
+			"url": url ,
+			success:function(data){
+				$('#option-items').append(data);
+			}
+		});
+		return;
+	}
+	function deleteoption(o) {
+		$(o).parent().parent().remove();
+	}
+</script>

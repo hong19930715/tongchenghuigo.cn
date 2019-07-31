@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.we7.cc" versionCode="0.8,1.0">
+	<application setting="true">
+		<name><![CDATA[社群团购接龙]]></name>
+		<identifie><![CDATA[cy163_salesjl]]></identifie>
+		<version><![CDATA[9.4.0]]></version>
+		<type><![CDATA[customer]]></type>
+		<ability><![CDATA[社群团购接龙]]></ability>
+		<description><![CDATA[社群团购接龙]]></description>
+		<author><![CDATA[社群团购接龙]]></author>
+		<url><![CDATA[https://www.we7.cc]]></url>
+	</application>
+	<platform>
+		<subscribes>
+		</subscribes>
+		<handles>
+			<message type="text" />
+		</handles>
+		<rule embed="true" />
+		<card embed="false" />
+		<supports>
+			<item type="wxapp" />
+		</supports>
+	</platform>
+	<bindings>
+		<cover>
+			<entry title="首页入口" do="index" state="" direct="false"/>
+			<entry title="代理商入口" do="merchant" state="" direct="false"/>
+			<entry title="我的订单（用户代理端）" do="myorder" state="" direct="false"/>
+		</cover>
+		<menu>
+			
+			<entry title="代理商管理" do="merchant" state="" direct="false"/>
+			<entry title="用户管理" do="member" state="" direct="false"/>
+			<entry title="提现管理" do="tixian" state="" direct="false"/>
+			<entry title="运费管理" do="yunfei" state="" direct="false"/>
+			<entry title="接龙管理" do="jielong" state="" direct="false"/>
+			<entry title="接龙订单管理" do="jlorder" state="" direct="false"/>
+			<entry title="结算中心" do="jiesuan" state="" direct="false"/>
+			<entry title="退款管理" do="refund" state="" direct="false"/>
+			<entry title="认证管理" do="renzheng" state="" direct="false"/>
+			<entry title="团队奖管理" do="teamjiang" state="" direct="false"/>
+			<entry title="优惠卷管理" do="youhuijuan" state="" direct="false"/>
+
+		</menu>
+		<page>
+			<entry title="小程序首页" do="/cy163_salesjl/pages/index/index" state="" direct="false"/>
+		</page>
+	</bindings>
+	<permissions>
+	</permissions>
+	<install><![CDATA[
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_cart` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `openid` varchar(200) NOT NULL,
+  `jlid` int(11) NOT NULL,
+  `goodsid` int(11) NOT NULL,
+  `goodsname` varchar(100) NOT NULL,
+  `total` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `allprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_city` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name` varchar(50) NOT NULL,
+  `code` varchar(50) NOT NULL,
+  `fcode` varchar(50) NOT NULL,
+  `firstz` char(1) NOT NULL,
+  `type` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3254 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_formid` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `weid` int(11) NOT NULL,
+  `formvalue` varchar(200) NOT NULL,
+  `time` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_goods` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `title` varchar(100) NOT NULL DEFAULT '',
+  `ftitle` varchar(100) NOT NULL,
+  `thumb` varchar(100) NOT NULL DEFAULT '',
+  `normalprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `chengbenprice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '省级代理价格',
+  `dailiprice` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '市级代理价',
+  `total` int(10) unsigned NOT NULL DEFAULT '0',
+  `createtime` int(10) unsigned NOT NULL,
+  `hasoption` int(11) DEFAULT '0',
+  `tiaoma` varchar(100) NOT NULL,
+  `thumbs` text NOT NULL,
+  `des` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_goods_option` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `goodsid` int(10) DEFAULT '0',
+  `title` varchar(100) NOT NULL,
+  `normalprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `chengbenprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `dailiprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `stock` int(11) DEFAULT '0',
+  `displayorder` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_hexiaoyuan` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `merchant_id` int(11) NOT NULL,
+  `fopenid` varchar(100) NOT NULL,
+  `openid` varchar(100) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_huodong` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `title` varchar(200) NOT NULL,
+  `starttime` int(11) NOT NULL,
+  `endtime` int(11) NOT NULL,
+  `time` int(11) NOT NULL,
+  `tqjs` tinyint(1) NOT NULL,
+  `canziti` tinyint(1) NOT NULL,
+  `cansonghuo` tinyint(1) NOT NULL,
+  `manjian` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `yfid` int(11) NOT NULL,
+  `sharetitle` varchar(100) NOT NULL,
+  `sharethumb` varchar(200) NOT NULL,
+  `sharedes` varchar(200) NOT NULL,
+  `pstype` tinyint(1) NOT NULL,
+  `hasteamjiang` tinyint(1) NOT NULL,
+  `autofield` tinyint(1) NOT NULL,
+  `candmfk` tinyint(1) NOT NULL,
+  `candj` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_huodong_teamjiang` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `hdid` int(11) NOT NULL,
+  `startmoney` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `endmoney` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `jiangli` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `displayerorder` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_huodonggoods` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `hdid` int(11) NOT NULL,
+  `goodsid` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_member` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `nickname` varchar(50) NOT NULL,
+  `avatar` varchar(200) NOT NULL,
+  `openid` varchar(50) NOT NULL,
+  `regtime` int(11) NOT NULL,
+  `gender` varchar(10) NOT NULL,
+  `shname` varchar(50) NOT NULL,
+  `shphone` varchar(50) NOT NULL,
+  `shcity` varchar(100) NOT NULL,
+  `shaddress` varchar(200) NOT NULL,
+  `rztype` tinyint(1) NOT NULL,
+  `dlopenid` varchar(100) NOT NULL,
+  `isxcx` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_memberaccount` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `openid` varchar(200) NOT NULL,
+  `money` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `time` int(11) NOT NULL,
+  `explain` varchar(50) NOT NULL,
+  `orderid` int(11) NOT NULL,
+  `candotime` int(11) NOT NULL,
+  `istking` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_membergoods` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `title` varchar(100) NOT NULL DEFAULT '',
+  `openid` varchar(200) NOT NULL,
+  `thumbs` text NOT NULL,
+  `normalprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `total` int(10) unsigned NOT NULL DEFAULT '0',
+  `createtime` int(10) unsigned NOT NULL,
+  `optionname` varchar(100) NOT NULL,
+  `hdid` int(11) NOT NULL,
+  `xiangounum` int(11) NOT NULL,
+  `inpeople` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_membergoods_jieti` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `goodsid` int(10) DEFAULT '0',
+  `jietiprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `jietinumstart` int(11) NOT NULL,
+  `jietinum` int(11) DEFAULT '0',
+  `displayorder` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `indx_goodsid` (`goodsid`),
+  KEY `indx_displayorder` (`displayorder`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_memberhuodong` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `openid` varchar(200) NOT NULL,
+  `nickname` varchar(100) NOT NULL,
+  `avatar` varchar(200) NOT NULL,
+  `des` text NOT NULL,
+  `title` varchar(200) NOT NULL,
+  `thumbs` text NOT NULL,
+  `starttime` int(11) NOT NULL,
+  `endtime` int(11) NOT NULL,
+  `time` int(11) NOT NULL,
+  `views` int(11) NOT NULL,
+  `inpeople` int(11) NOT NULL,
+  `owndel` tinyint(1) NOT NULL,
+  `admindel` tinyint(1) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `yunfei` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `manjian` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `canziti` tinyint(1) NOT NULL,
+  `cansh` tinyint(1) NOT NULL,
+  `isxiugai` tinyint(1) NOT NULL,
+  `jingdu` varchar(50) NOT NULL,
+  `weidu` varchar(50) NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `sharethumb` varchar(255) NOT NULL,
+  `basicsales` int(11) NOT NULL,
+  `basicviews` int(11) NOT NULL,
+  `telphone` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_memberrz` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `openid` varchar(50) NOT NULL,
+  `rzrealname` varchar(50) NOT NULL,
+  `rzidcard` varchar(50) NOT NULL,
+  `idcard1` varchar(100) NOT NULL,
+  `idcard2` varchar(100) NOT NULL,
+  `rztelphone` varchar(50) NOT NULL,
+  `rzqiyename` varchar(100) NOT NULL,
+  `rzsanzheng` varchar(100) NOT NULL,
+  `rztype` tinyint(1) NOT NULL,
+  `rzordersn` varchar(100) NOT NULL,
+  `rztime` int(11) NOT NULL,
+  `rztransid` varchar(50) NOT NULL,
+  `rzpaydetail` varchar(255) NOT NULL,
+  `rzstatus` tinyint(1) NOT NULL,
+  `rzprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `isjujue` tinyint(1) NOT NULL,
+  `jujuesm` varchar(200) NOT NULL,
+  `tgtime` int(11) NOT NULL,
+  `jjtime` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `openid` (`openid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_merchant` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` smallint(6) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `openid` varchar(100) NOT NULL,
+  `addtime` int(11) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `avatar` varchar(200) NOT NULL,
+  `address` varchar(200) NOT NULL,
+  `telphone` varchar(50) NOT NULL,
+  `idcard` varchar(100) NOT NULL,
+  `realname` varchar(50) NOT NULL,
+  `txdisaccount` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `usetx` tinyint(1) NOT NULL,
+  `fopenid` varchar(100) NOT NULL,
+  `istz` tinyint(1) NOT NULL,
+  `tztime` int(11) NOT NULL,
+  `tzintype` tinyint(1) NOT NULL,
+  `wxqrcode` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_merchantaccount` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `merchant_id` int(11) NOT NULL,
+  `money` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `time` int(11) NOT NULL,
+  `explain` varchar(50) NOT NULL,
+  `orderid` int(11) NOT NULL,
+  `candotime` int(11) NOT NULL,
+  `istking` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_merchanthd` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `hdid` int(11) NOT NULL,
+  `time` int(11) NOT NULL,
+  `merchant_id` int(11) NOT NULL,
+  `sharetitle` varchar(100) NOT NULL,
+  `sharethumb` varchar(200) NOT NULL,
+  `sharedes` varchar(200) NOT NULL,
+  `yunfei` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `manjian` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `canziti` tinyint(1) NOT NULL,
+  `cansonghuo` tinyint(1) NOT NULL,
+  `daojishi` tinyint(1) NOT NULL,
+  `buydetail` tinyint(1) NOT NULL,
+  `dhtznum` int(11) NOT NULL,
+  `candmfk` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_merchanthdgoods` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `time` int(11) NOT NULL,
+  `mhdid` int(11) NOT NULL,
+  `goodsid` int(11) NOT NULL,
+  `optionid` int(11) NOT NULL,
+  `dlprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_order` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `merchant_id` int(11) NOT NULL,
+  `from_user` varchar(50) NOT NULL,
+  `ordersn` varchar(100) NOT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '-1取消状态，0普通状态，1为已付款，2为已发货，3为成功',
+  `transid` varchar(30) NOT NULL DEFAULT '0' COMMENT '微信支付单号',
+  `remark` varchar(1000) NOT NULL DEFAULT '',
+  `address` varchar(1024) NOT NULL DEFAULT '' COMMENT '收货地址信息',
+  `paydetail` varchar(255) NOT NULL COMMENT '支付详情',
+  `createtime` int(10) unsigned NOT NULL,
+  `yunfei` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `pstype` tinyint(1) NOT NULL,
+  `hdid` int(11) NOT NULL,
+  `mhdid` int(11) NOT NULL,
+  `alllirun` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `jlid` int(11) NOT NULL,
+  `jlopenid` varchar(100) NOT NULL,
+  `tuiprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `isjl` tinyint(1) NOT NULL,
+  `expresscom` varchar(30) NOT NULL DEFAULT '',
+  `expresssn` varchar(200) NOT NULL DEFAULT '',
+  `express` varchar(50) NOT NULL DEFAULT '',
+  `cantktime` int(11) NOT NULL,
+  `tktime` int(11) NOT NULL,
+  `ztdid` int(11) NOT NULL,
+  `refund_desc` varchar(100) NOT NULL,
+  `refund_status` tinyint(1) NOT NULL,
+  `refund_price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `fhtime` int(11) NOT NULL,
+  `otheraddress` varchar(255) NOT NULL,
+  `isdmfk` tinyint(1) NOT NULL,
+  `jltuiprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `ztdaddress` varchar(100) NOT NULL,
+  `ztdjingdu` varchar(50) NOT NULL,
+  `ztdweidu` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ordersn` (`ordersn`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_order_goods` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(10) unsigned NOT NULL,
+  `orderid` int(10) unsigned NOT NULL,
+  `goodsid` int(10) unsigned NOT NULL,
+  `price` decimal(10,2) DEFAULT '0.00',
+  `total` int(10) unsigned NOT NULL DEFAULT '1',
+  `optionid` int(10) DEFAULT '0',
+  `createtime` int(10) unsigned NOT NULL,
+  `optionname` text,
+  `goodsname` varchar(100) NOT NULL,
+  `hdid` int(11) NOT NULL,
+  `mhdid` int(11) NOT NULL,
+  `lirun` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `jlid` int(11) NOT NULL,
+  `tuiprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `cbprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `dlprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `hexiaonum` int(11) NOT NULL,
+  `dailiprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_refund` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `openid` varchar(200) NOT NULL,
+  `orderid` int(11) NOT NULL,
+  `sqtime` int(11) NOT NULL,
+  `time` int(11) NOT NULL,
+  `type` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `result` varchar(50) NOT NULL,
+  `refund_id` varchar(100) NOT NULL,
+  `out_refund_no` varchar(100) NOT NULL,
+  `refund_desc` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_tixian` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `openid` varchar(100) NOT NULL,
+  `money` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `time` int(11) NOT NULL,
+  `explain` varchar(50) NOT NULL,
+  `txstatus` tinyint(1) NOT NULL,
+  `dztime` int(11) NOT NULL,
+  `dzprice` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `feilv` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `membertype` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_tzorder` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `openid` varchar(50) NOT NULL,
+  `ordersn` varchar(100) NOT NULL,
+  `time` int(11) NOT NULL,
+  `transid` varchar(50) NOT NULL,
+  `paydetail` varchar(255) NOT NULL,
+  `status` tinyint(1) NOT NULL,
+  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `openid` (`openid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_yfsheng` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `yfid` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `city` varchar(100) NOT NULL,
+  `xian` varchar(100) NOT NULL,
+  `money` decimal(10,2) NOT NULL DEFAULT '0.00',
+  `diqutype` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_yunfei` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `openid` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `ims_cy163salesjl_zitidian` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `weid` int(11) NOT NULL,
+  `openid` varchar(200) NOT NULL,
+  `address` varchar(200) NOT NULL,
+  `jingdu` varchar(50) NOT NULL,
+  `weidu` varchar(50) NOT NULL,
+  `ztdtype` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+]]></install>
+	<uninstall><![CDATA[DROP TABLE IF EXISTS `ims_cy163salesjl_cart`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_city`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_formid`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_goods`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_goods_option`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_hexiaoyuan`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_huodong`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_huodong_teamjiang`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_huodonggoods`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_member`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_memberaccount`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_membergoods`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_membergoods_jieti`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_memberhuodong`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_memberrz`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_merchant`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_merchantaccount`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_merchanthd`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_merchanthdgoods`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_order`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_order_goods`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_refund`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_tixian`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_tzorder`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_yfsheng`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_yunfei`;
+DROP TABLE IF EXISTS `ims_cy163salesjl_zitidian`;
+]]></uninstall>
+	<upgrade><![CDATA[]]></upgrade>
+
+</manifest>

@@ -1,0 +1,44 @@
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">优惠卷名称</label>
+	<div class="col-sm-6 col-xs-12">
+		<div class="input-group">
+			<input type="text" name="title" id="title" class="form-control" value="{$item['title']}" />		
+		</div>
+
+	</div>
+</div>
+
+
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">优惠方式</label>
+	<div class="col-sm-9 col-xs-12">
+		<div class="input-group">
+			<span class="input-group-addon">满</span>
+			<input type="text" name="manPrice" class="form-control" value="{$item['manPrice']}" />
+			<span class="input-group-addon">元</span>
+		</div>
+
+		<div class="input-group">
+			<span class="input-group-addon">减</span>
+			<input type="text" name="jianPrice" class="form-control" value="{$item['jianPrice']}" />
+			<span class="input-group-addon">元</span>
+		</div>
+
+	</div>
+</div>
+
+
+<div class="form-group" style="margin-left:87px;">
+<label class="col-xs-12 col-sm-1 control-label">开始时间</label>
+<div class="col-sm-4 col-xs-12">
+	{php echo tpl_form_field_date('starttime',$starttime,true);}
+</div>
+</div>
+
+<div class="form-group"  style="margin-left:87px;">
+<label class="col-xs-12 col-sm-1 control-label">结束时间</label>
+<div class="col-sm-4 col-xs-12">
+	{php echo tpl_form_field_date('endtime',$endtime,true);}
+</div>
+</div>

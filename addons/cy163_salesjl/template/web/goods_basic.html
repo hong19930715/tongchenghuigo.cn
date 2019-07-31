@@ -1,0 +1,136 @@
+
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">商品类型</label>
+	<div class="col-sm-6 col-xs-12">
+		<div class="input-group">
+			<input type="text" name="leixin" id="leixin" class="form-control" value="{$item['leixin']}" />		
+		</div>
+		<span class="help-block" style="color:red;">请填写此商品的类型(4至6个字)</span>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>商品来源</label>
+	<div class="col-sm-9 col-xs-12">
+		<input type="text" name="from" class="form-control" value="{$item['from']}" />
+	</div>
+</div>
+
+<div class="form-group" hidden>
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">开始时间</label>
+	<div class="col-sm-4 col-xs-12">
+		{php echo tpl_form_field_date('starttime',$starttime,true);}
+	</div>
+</div>
+<div class="form-group" hidden>
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">结束时间</label>
+	<div class="col-sm-4 col-xs-12">
+		{php echo tpl_form_field_date('endtime',$endtime,true);}
+	</div>
+</div>
+
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">商品条码</label>
+	<div class="col-sm-9 col-xs-12">
+		<input type="text" name="tiaoma" class="form-control" value="{$item['tiaoma']}" />
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">商品标题</label>
+	<div class="col-sm-9 col-xs-12">
+		<input type="text" name="topTitle" class="form-control" value="{$item['topTitle']}" />
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>商品名称</label>
+	<div class="col-sm-9 col-xs-12">
+		<input type="text" name="title" class="form-control" value="{$item['title']}" />
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label"><span style='color:red'>*</span>商品简称</label>
+	<div class="col-sm-9 col-xs-12">
+		<input type="text" name="ftitle" class="form-control" value="{$item['ftitle']}" />
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">促销标识</label>
+	<div class="col-sm-6 col-xs-12">
+		<div class="input-group">
+			<input type="text" name="sales" id="sales" class="form-control" value="{$item['sales']}" />
+		</div>
+		<span class="help-block" style="color:red;">限4个字以内（如：十点爆款；新品发布）</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">活动描述</label>
+	<div class="col-sm-9 col-xs-12">
+		<div class="input-group">
+			<input type="text" name="describer" id="describer" class="form-control" value="{$item['describer']}" />
+		</div>
+		<span class="help-block" style="color:red;">限20个字以内</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">商品缩略图</label>
+	<div class="col-sm-9 col-xs-12">
+		{php echo tpl_form_field_image('thumb', $item['thumb'], '', array('extras' => array('text' => 'readonly')))}
+		<span class="help-block" style="color:red;">推荐尺寸640*640</span>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">商品图集</label>
+	<div class="col-sm-9 col-xs-12">
+		{php echo tpl_form_field_multi_image('thumbs',$piclist)}
+		<span class="help-block" style="color:red;">【开吧源码】推荐尺寸640*640</span>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">商品价格</label>
+	<div class="col-sm-9 col-xs-12">
+		<div class="input-group">
+			<span class="input-group-addon">售价</span>
+			<input type="text" name="normalprice" class="form-control" value="{$item['normalprice']}" />
+			<span class="input-group-addon">元</span>
+		</div>
+
+		<div class="input-group">
+			<span class="input-group-addon">代理价</span>
+			<input type="text" name="dailiprice" class="form-control" value="{$item['dailiprice']}" />
+			<span class="input-group-addon">元</span>
+		</div>
+
+		<div class="input-group">
+			<span class="input-group-addon">成本价</span>
+			<input type="text" name="chengbenprice" class="form-control" value="{$item['chengbenprice']}" />
+			<span class="input-group-addon">元</span>
+		</div>
+	</div>
+</div>
+
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">限购数量</label>
+	<div class="col-sm-6 col-xs-12">
+		<div class="input-group">
+			<input type="text" name="total" id="total" class="form-control" value="{$item['total']}" />
+			<span class="input-group-addon">件</span>
+		</div>
+		<span class="help-block" style="color:red;">当前商品的库存数量(限购量)</span>
+	</div>
+</div>
+<div class="form-group">
+	<label class="col-xs-12 col-sm-3 col-md-2 control-label">配送费用</label>
+	<div class="col-sm-6 col-xs-12">
+		<div class="input-group">
+			<input type="text" name="psprice" class="form-control" value="{$item['psprice']}" />
+			<span class="input-group-addon">元</span>
+		</div>
+	
+	</div>
+</div>

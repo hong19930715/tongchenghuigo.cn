@@ -1,0 +1,172 @@
+{template 'common/header'}
+
+<ul class="nav nav-tabs">
+	<li {if $status == '0' && $operation == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('tixian')}">等待确认</a></li>
+	<li {if $status == '1'}class="active"{/if}><a href="{php echo $this->createWebUrl('tixian',array('status' =>'1'))}">已成功</a></li>
+	<li {if $status == '-1'}class="active"{/if}><a href="{php echo $this->createWebUrl('tixian',array('status' =>'-1'))}">已驳回</a></li>
+</ul>
+
+{if $operation == 'display'}
+<div class="main panel panel-default">
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>
+					<th style="width:15%;">姓名<br />微信昵称</th>					
+					<th style="width:10%;">提现金额<br />实际到账</th>
+					<th style="width:10%;">服务费费率</th>
+					<th style="width:20%;">处理说明<br />类型</th>
+					<th style="width:15%;">提交时间<br />到账时间</th>
+					<th style="text-align:right;">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				{loop $list $tixian}
+				<tr>
+					<td>
+						<div><span class="label label-info">{$tixian['realname']}</span></div>
+						<div style="margin-top:5px;"><span class="label label-info">{$tixian['nickname']}</span></div>
+					</td>
+					<td>
+						<div><span style="color:red;">{php echo abs($tixian['money'])}</span></div>
+						<div style="margin-top:5px;"><span style="color:green;">{php echo abs($tixian['dzprice'])}</span></div>
+					</td>
+					<td>{$tixian['feilv']}%</td>
+					<td>
+						<div>{$tixian['explain']}</div>
+						<div style="margin-top:5px;"><span class="label label-info">{if $tixian['membertype'] == 1}个人提现{else}代理商提现{/if}</span></div>
+					</td>
+					<td>
+						<div>{php echo date('Y-m-d H:i:s', $tixian['time'])}</div>
+						<div style="margin-top:5px;">
+						{if $tixian['txtime']}
+							{php echo date('Y-m-d H:i:s', $tixian['dztime'])}
+						{else}
+							暂无
+						{/if}
+						</div>
+					</td>
+					<td style="text-align:right;">
+						<button type="button" data-toggle="modal" data-target="#zhanghu{$tixian['id']}" class="btn btn-warning btn-sm">账户明细</button>
+						{if $status == 0}  
+							<label>
+								<a href="javascript:;" class="btn btn-success btn-sm" onclick="out_cash('{$tixian['id']}','{$tixian['nickname']}','{php echo abs($tixian['dzprice'])}元');">发放</a>
+								<a href="javascript:;" class="btn btn-danger btn-sm" onclick="refuse_cash('{$tixian['id']}','{$tixian['nickname']}');">拒绝</a>
+							</label>
+						{/if}
+					</td>
+				</tr>
+				{/loop}
+			</tbody>
+		</table>
+		{$pager}
+	</div>
+</div>
+{/if}
+{loop $list $row}
+<div class="modal fade" id="zhanghu{$row['id']}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<h4 class="modal-title">{$row['nickname']}的账户明细</h4>
+			</div>
+			<div class="modal-body">
+				<table class="table table-hover table-striped table-condensed">
+					<thead>
+						<tr>
+							<th style="width:15%;">说明</th>
+							<th style="width:15%;">金额</th>
+							<th style="width:30%;">时间</th>
+							<th style="text-align:right;">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						{loop $row['moneylist'] $rowchat}
+							<tr class="trre{$rowchat['id']}">
+								<td>
+									<span class="label label-info">{$rowchat['explain']}</span>
+								</td>
+								<td>
+									{if $rowchat['money'] > 0}
+										<span class="label label-success">{$rowchat['money']}</span>
+									{else}
+										<span class="label label-danger">{$rowchat['money']}</span>
+									{/if}
+								</td>
+								<td>
+									{php echo date("Y-m-d H:i:s",$rowchat['time'])}
+								</td>
+								<td style="text-align:right;">
+									<a data-id="{$rowchat['id']}" class="btn btn-default btn-sm deldu" title="删除"><i class="fa fa-times"></i></a>
+								</td>
+							</tr>
+						{/loop}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{/loop}
+<script type="text/javascript">
+
+	function out_cash(ids,name,money){
+		require(['jquery', 'util'], function($, u) {
+			var content =  '	<div class="form-group">';
+				content += '	<h4>发放'+money+'(企业向用户付款)</h4>';
+				content += '	</div>';
+
+			var footer =
+					'<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
+					'<button type="button" class="btn btn-success">确定发放</button>';
+			var diaobj = u.dialog(name?name:ids, content, footer);
+			diaobj.find('.btn-default').click(function() {
+				diaobj.modal('hide');
+			});
+			diaobj.find('.btn-success').click(function() {
+				$.post("{php echo $this->createWebUrl('tixian', array('op' => 'outcash'))}",{
+					ids:ids,
+				},function(resp) {
+					if(resp.status==1){
+						alert(resp.info);
+						location.reload();
+					}else{
+						alert(resp.info.message);
+					}
+				});
+			});
+			diaobj.modal('show');
+		});
+	}
+
+	function refuse_cash(id,name) {
+		require(['jquery', 'util'], function($, u) {
+			var content =  '	<div class="form-group">';
+				content += '	<h4>拒绝提现</h4>';
+				content += '	</div>';
+
+			var footer =
+					'<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>' +
+					'<button type="button" class="btn btn-success">确定拒绝</button>';
+			var diaobj = u.dialog(name?name:id, content, footer);
+			diaobj.find('.btn-default').click(function() {
+				diaobj.modal('hide');
+			});
+			diaobj.find('.btn-success').click(function() {
+				$.post("{php echo $this->createWebUrl('tixian', array('op' => 'refusecash'))}",{
+					id:id,
+				},function(resp) {
+					if(resp.status==1){
+						alert(resp.info);
+						location.reload();
+					}else{
+						alert(resp.info);
+					}
+				});
+			});
+			diaobj.modal('show');
+		});
+	}
+</script>
+{template 'common/footer'}

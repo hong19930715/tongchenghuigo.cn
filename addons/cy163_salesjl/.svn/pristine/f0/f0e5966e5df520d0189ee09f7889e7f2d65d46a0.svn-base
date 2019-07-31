@@ -1,0 +1,163 @@
+{template 'common/header'}
+<ul class="nav nav-tabs">
+	<li {if $operation == 'display'}class="active"{/if}><a href="{php echo $this->createWebUrl('goods', array('op' => 'display'))}">商品管理</a></li>
+	<li {if $operation == 'post'}class="active"{/if}><a href="{php echo $this->createWebUrl('goods', array('op' => 'post'))}">{if empty($item['id'])}添加商品{else}编辑商品{/if}</a></li>
+</ul>
+{if $operation == 'post'}
+<div class="main">
+	<form action="" method="post" class="form-horizontal form" enctype="multipart/form-data" id="form1">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				{if empty($item['id'])}添加商品{else}编辑商品{/if}
+			</div>
+			<div class="panel-body">
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+					<li class="active" role="presentation"><a aria-expanded="true" aria-controls="tab_basic" data-toggle="tab" role="tab" href="#tab_basic">基本信息</a></li>
+					<li role="presentation"><a aria-expanded="true" aria-controls="tab_option" data-toggle="tab" role="tab" href="#tab_option">商品规格</a></li>
+					<li role="presentation"><a aria-expanded="true" aria-controls="tab_des" data-toggle="tab" role="tab" href="#tab_des">商品详情</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane  active" id="tab_basic">{template 'web/goods_basic'}</div>
+					<div class="tab-pane" id="tab_option">{template 'web/goods_option'}</div>
+					<div class="tab-pane" id="tab_des">
+						<div class="panel-body">
+							<div class="form-group">
+								<label class="col-xs-12 col-sm-2 control-label">商品详情</label>
+								<div class="col-sm-10 col-xs-12">
+									{php echo tpl_ueditor('des', $item['des']);}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group col-sm-12">
+			<input type="submit" name="submit" value="提交" class="btn btn-primary col-lg-1" />
+			<input type="hidden" name="token" value="{$_W['token']}" />
+		</div>
+	</form>
+</div>
+{elseif $operation == 'display'}
+
+<div class="main">
+	<div class="panel panel-info">
+	<div class="panel-heading">筛选</div>
+	<div class="panel-body">
+		<form action="./index.php" method="get" class="form-horizontal" role="form">
+			<input type="hidden" name="c" value="site" />
+			<input type="hidden" name="a" value="entry" />
+			<input type="hidden" name="m" value="cy163_salesjl" />
+			<input type="hidden" name="do" value="goods" />
+			<input type="hidden" name="op" value="display" />
+			<div class="form-group">
+				<label class="col-xs-12 col-sm-2 col-md-2 control-label">商品关键字</label>
+				<div class="col-xs-12 col-sm-4">
+					<input class="form-control" name="keyword" id="" type="text" value="{$_GPC['keyword']}">
+				</div>
+				<div class="col-xs-12 col-sm-4">
+					<button class="btn btn-default"><i class="fa fa-search"></i> 搜索</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+</div>
+<div class="panel panel-default">
+	<div class="panel-body table-responsive">
+		<table class="table table-hover">
+			<thead class="navbar-inner">
+				<tr>
+					<th style="width:5%;"></th>
+					<th style="width:5%;">ID</th>
+					<th style="width:40%;">商品标题</th>
+					<th style="width:5%;">库存</th>
+					<!--<th style="width:10%;">售价</th>-->
+					<!--<th style="width:10%;">代理价</th>-->
+					<!--<th style="width:10%;">成本价</th>-->
+					<th style="width:10%;">销量</th>
+					<th style="width:10%;">状态</th>
+					<th style="text-align:right;width:10%;">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+			<form action="./index.php" method="post" role="form">
+				<input type="hidden" name="c" value="site" />
+				<input type="hidden" name="a" value="entry" />
+				<input type="hidden" name="m" value="cy163_salesjl" />
+				<input type="hidden" name="do" value="goods" />
+				{loop $list $item}
+				<tr>
+					<td><input type="checkbox" class="form-control" name="id[]" value="{$item['id']}" style="width:15px;height:15px;" /></td>
+					<td>{$item['id']}</td>
+					<td>{$item['title']}</td>
+					<td>{$item['total']}</td>
+					<td>{$item['all']}</td>
+					<!--<td>-->
+						<!--<span class="label label-success">{$item['normalprice']}</span>-->
+					<!--</td>-->
+					<!--<td>-->
+						<!--<span class="label label-info">{$item['dailiprice']}</span>-->
+					<!--</td>-->
+					<!--<td>-->
+						<!--<span class="label label-primary">{$item['chengbenprice']}</span><br />-->
+					<!--</td>-->
+					<td>
+						{if $item['status']==1}
+							<a class="danger" href="{php echo $this->createWebUrl('goods', array('id' => $item['id'], 'op' => 'sigleudown'))}">下架</a>
+						{/if}
+						{if $item['status']==0}
+							<a class="success" href="{php echo $this->createWebUrl('goods', array('id' => $item['id'], 'op' => 'sigleupload'))}">上架</a>
+						{/if}
+						<!--<div class="make-switch" data-on-label="上架" data-off-label="下架" data-on="primary" data-off="info">-->
+							<!--<input type="checkbox" checked />-->
+						<!--</div>-->
+					</td>
+					<td style="text-align:right;">
+						<a href="{php echo $this->createWebUrl('goods', array('id' => $item['id'], 'op' => 'post'))}" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="编辑"><i class="fa fa-pencil"></i></a>
+						<a href="{php echo $this->createWebUrl('goods', array('id' => $item['id'], 'op' => 'delete'))}" onclick="return confirm('此操作不可恢复，确认删除？');return false;" class="btn btn-default btn-sm" data-toggle="tooltip" data-placement="top" title="删除"><i class="fa fa-times"></i></a>
+					</td>
+				</tr>
+				{/loop}
+				<tr>
+					<td></td>
+					<td colspan="7">
+						<input name="token" value="{$_W['token']}" type="hidden">
+						<button class="btn btn-default" type="button" id="selectAll">全选</button>
+						<button class="btn btn-default" type="button" id="unSelect">全不选</button>
+						<input name="op" value="upload" type="hidden">
+						<input name="submit" class="btn btn-success" value="批量上架" type="submit">
+						<input name="op" value="down" type="hidden">
+						<input name="submit" class="btn btn-danger" value="批量下架" type="submit">
+					</td>
+				</tr>
+			</form>
+			</tbody>
+		</table>
+	</div>
+</div>
+	{$pager}
+{/if}
+	<script>
+        $("#selectAll").click(function(){
+            $(":checkbox").each(function(){
+                $(this).prop("checked", true);
+            });
+        });
+        $("#unSelect").click(function(){
+            $(":checkbox").each(function(){
+                $(this).prop("checked", false);
+            });
+        });
+        $(function(){
+            $('div.make-switch').on('switch-change', function (e, data) {
+                var rids = [];
+                $('div.make-switch :checkbox:checked').each(function(){
+                    rids.push($(this).val());
+                });
+                $.post(location.href, {'rids': rids.toString()}, function(dat){
+                });
+            });
+        });
+	</script>
+{template 'common/footer'}
